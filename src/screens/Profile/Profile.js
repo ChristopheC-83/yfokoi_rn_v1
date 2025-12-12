@@ -5,25 +5,40 @@ import { useUserStore } from "../../store/userStore";
 import { supabase } from "../../lib/supabase";
 
 export default function Profile() {
-  const { user, clearUser } = useUserStore();
+  const { user, clearUser, updateUser } = useUserStore();
 
   async function clear() {
     if (!user?.id) return;
 
-    // 1️⃣ Suppression locale
-    await clearUser();
+    await clearUser( user.id );
 
-    // 2️⃣ Suppression Supabase par id
-    const { error } = await supabase.from("users").delete().eq("id", user.id);
-    if (error) console.error("Supabase delete error:", error);
+    
   }
+
+  async function update() {
+    if (!user?.id) return;
+    const newName = "New Name";
+    const newIcon = "👽";
+
+    await updateUser(  user.id, {name: newName, icon: newIcon });
+
+
+
+  }
+
+
+
+
   return (
     <ScreenContainer style={s}>
       <Text>
         Profile {user?.name} {user?.icon}
       </Text>
-      <Pressable onPress={clear}>
+      <Pressable onPress={clear} style={{marginVertical:60}}>
         <Text>Supprimer User</Text>
+      </Pressable>
+      <Pressable onPress={update}>
+        <Text>Modifier User</Text>
       </Pressable>
     </ScreenContainer>
   );
