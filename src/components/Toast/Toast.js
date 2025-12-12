@@ -48,15 +48,15 @@ function ToastItem({ toast, index }) {
 const toastColor = (type) => {
   switch (type) {
     case "success":
-      return "#4CAF50";
+      return "#4CAF50dd";
     case "warning":
-      return "#FF9800";
+      return "#FF9800dd";
     case "danger":
-      return "#F44336";
+      return "#F44336dd";
     case "info":
-      return "#2196F3";
+      return "#2196F3dd";
     default:
-      return "#b2b2b2";
+      return "#b2b2b2dd";
   }
 };
 

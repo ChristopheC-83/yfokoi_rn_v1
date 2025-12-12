@@ -15,5 +15,5 @@ export const s = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
-  text: { color: "#fff", fontWeight: "600" },
+  text: { color: "#fff", fontWeight: "600", textAlign: "center" },
 });
