@@ -21,8 +21,13 @@ export default function SetUserName() {
     }
     setName(name.trim());
     setIcon(icon.trim());
-    await createUser(name.trim(), icon);
-    console.log(name, icon);
+    const result =await createUser(name.trim(), icon);
+    if (result.ok) {
+      showToast(`Bienvenue ${name} !`, "success");
+    } else {
+      showToast("Erreur lors de la création ❌", "danger");
+      console.error(result.error);
+    }
   }
   return (
     <ScreenContainer style={s}>

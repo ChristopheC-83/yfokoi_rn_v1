@@ -2,53 +2,83 @@ import { create } from "zustand";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import "react-native-get-random-values";
 import { v4 as uuid } from "uuid";
-import { supabase } from "../lib/supabase"; // ✅ important
+import { supabase } from "../lib/supabase";
 
-export const useUserStore = create((set) => ({
+export const useUserStore = create((set, get) => ({
   user: null, // { id, name, icon }
 
-  loadUser: async () => {
-    const raw = await AsyncStorage.getItem("user");
-    if (raw) set({ user: JSON.parse(raw) });
-  },
-
+  // 🔹 Création du user lors de la première ouverture
   createUser: async (name, icon) => {
-    const id = uuid();
-    const newUser = { id, name, icon };
+    try {
+      const id = uuid();
+      const newUser = { id, name, icon };
 
-    // 1️⃣ Stockage local
-    await AsyncStorage.setItem("user", JSON.stringify(newUser));
-    set({ user: newUser });
+      // 1️⃣ Stockage local
+      await AsyncStorage.setItem("user", JSON.stringify(newUser));
+      set({ user: newUser });
 
-    // 2️⃣ Stockage Supabase
-    const { error } = await supabase.from("users").insert([newUser]);
-    if (error) console.error("Supabase insert error:", error);
-    },
-  
-  updateUser: async (id, updates) => {
-    if (!id) return;
+      // 2️⃣ Stockage Supabase
+      const { error } = await supabase.from("users").insert([newUser]);
+      if (error) throw error;
 
-    // 1️⃣ Stockage Supabase
-    const { error } = await supabase.from("users").update(updates).eq("id", id);
-    if (error) {
-      console.error("Supabase update error:", error.message);
-      return;
+      return { ok: true };
+    } catch (err) {
+      console.error("createUser failed:", err);
+      return { ok: false, error: err };
     }
-
-    // 2️⃣ Stockage local et mise à jour du store
-    set((state) => {
-      const newUser = { ...state.user, ...updates };
-      if (updates.name) AsyncStorage.setItem("user_name", updates.name);
-      if (updates.icon) AsyncStorage.setItem("user_icon", updates.icon);
-      return { user: newUser };
-    });
   },
 
+  // 🔹 Mise à jour
+  updateUser: async (id, updates) => {
+    if (!id) return { ok: false };
+    try {
+      // 1️⃣ Supabase
+      const { error } = await supabase
+        .from("users")
+        .update(updates)
+        .eq("id", id);
+      if (error) throw error;
+
+      // 2️⃣ Mise à jour locale
+      const newUser = { ...get().user, ...updates };
+      await AsyncStorage.setItem("user", JSON.stringify(newUser));
+
+      // 3️⃣ Mise à jour du store
+      set({ user: newUser });
+
+      return { ok: true };
+    } catch (err) {
+      console.error("updateUser failed:", err);
+      return { ok: false, error: err };
+    }
+  },
+
+  // 🔹 Suppression
   clearUser: async (id) => {
-    await AsyncStorage.removeItem("user");
-    set({ user: null });
-    //    suppression de supabase
-    const { error } = await supabase.from("users").delete().eq("id", id);
-    if (error) console.error("Supabase delete error:", error);
+    if (!id) return { ok: false };
+    try {
+      // 1️⃣ Suppression locale
+      await AsyncStorage.removeItem("user");
+      set({ user: null });
+
+      // 2️⃣ Suppression Supabase
+      const { error } = await supabase.from("users").delete().eq("id", id);
+      if (error) throw error;
+
+      return { ok: true };
+    } catch (err) {
+      console.error("clearUser failed:", err);
+      return { ok: false, error: err };
+    }
+  },
+
+  // 🔹 Chargement initial
+  loadUser: async () => {
+    try {
+      const data = await AsyncStorage.getItem("user");
+      if (data) set({ user: JSON.parse(data) });
+    } catch (err) {
+      console.error("loadUser failed:", err);
+    }
   },
 }));
