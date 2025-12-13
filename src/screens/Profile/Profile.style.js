@@ -1,5 +1,71 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet } from "react-native";
 
 export const s = StyleSheet.create({
-  tabBarStyle:{}
+  title: {
+    textAlign: "center",
+    fontSize: 22,
+    marginVertical: 20,
+    fontWeight: "bold",
+  },
+  container: { flex: 1, width: "90%", alignSelf: "center" },
+  label: {
+    textAlign: "start",
+    fontSize: 20,
+    marginVertical: 20,
+    fontWeight: "semibold",
+  },
+  inputName: {
+    width: "100%",
+    alignSelf: "center",
+    borderWidth: 1,
+    padding: 12,
+    borderRadius: 8,
+    marginBottom: 20,
+  },
+  iconsContainer: {
+    flexWrap: "wrap",
+    flexDirection: "row",
+    paddingBottom: 30,
+    justifyContent: "center",
+  },
+  icon: {
+    margin: 5,
+    padding: 10,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    backgroundColor: "#fff",
+  },
+  iconText: { fontSize: 24 },
+  subText: {
+    textAlign: "center",
+    color: "#777",
+    marginTop: 20,
+  },
+  updateBtn: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#fff",
+    backgroundColor: "green",
+    padding: 10,
+    borderRadius: 8,
+    marginTop: 10,
+    width: "90%",
+    alignSelf: "center",
+    textAlign: "center",
+    marginBottom: 20,
+  },
+  deleteBtn: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#fff",
+    backgroundColor: "red",
+    padding: 10,
+    borderRadius: 8,
+    marginTop: 10,
+    width: "80%",
+    alignSelf: "center",
+    textAlign: "center",
+    marginBottom: 20,
+  },
 });

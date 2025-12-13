@@ -6,9 +6,10 @@ export const s = StyleSheet.create({
     backgroundColor: "#000000",
     justifyContent: "center",
     alignItems: "center",
+    gap:5
   },
   text1:{
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: "bold",
     color: "#fff",
     },
