@@ -6,6 +6,7 @@ import SharedList from "../screens/SharedList/SharedList";
 import TabIcon from "./components/TabIcon";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Platform } from "react-native";
+import ListsStack from "./ListsStack";
 
 const Tabs = createBottomTabNavigator();
 const TAB_HEIGHT = Platform.OS === "ios" ? 80 : 70;
@@ -32,7 +33,7 @@ export default function AppNavigation() {
         />
         <Tabs.Screen
           name="Mes Listes"
-          component={MyLists}
+          component={ListsStack}
           options={{
             tabBarIcon: ({ focused }) => (
               <TabIcon focused={focused} icon="list" label="Mes Listes" />

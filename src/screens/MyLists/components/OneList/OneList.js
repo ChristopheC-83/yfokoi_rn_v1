@@ -4,8 +4,10 @@ import { useState } from "react";
 import { useListStore } from "../../../../store/listsStore";
 import { useToastStore } from "../../../../store/toastStore";
 import OneListEdit from "./OneListEdit";
+import { useNavigation } from "@react-navigation/native";
 
 export default function OneList({ id, name }) {
+  const navigation = useNavigation();
   const { showToast } = useToastStore();
   const { updateList, deleteList, editingListId, setEditingListId } =
     useListStore();
@@ -42,7 +44,12 @@ export default function OneList({ id, name }) {
 
   return (
     <View style={s.oneList}>
-      <Text style={s.name}>➡️ {name}</Text>
+      <Pressable
+        style={s.nameContainer}
+        onPress={() => navigation.navigate("ListDetails", { id, name})}
+      >
+        <Text style={s.name}>➡️ {name}</Text>
+      </Pressable>
       <View style={s.actions}>
         <Pressable
           onPress={() => {

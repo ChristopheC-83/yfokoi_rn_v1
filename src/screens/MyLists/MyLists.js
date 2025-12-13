@@ -33,7 +33,7 @@ export default function MyLists() {
   return (
     <ScreenContainer style={s}>
       <Header
-        text1={`${user?.icon} ${user?.name}, Yfokoi pour toi ?`}
+        text1={`${user?.icon} ${user?.name}, Yfokoi ? pour toi !`}
         text2="Mes listes personnelles 🔒"
       />
       <View style={s.addContainer}>
@@ -64,7 +64,9 @@ export default function MyLists() {
           <FlatList
             data={lists}
             keyExtractor={(list) => list.id}
-            renderItem={({ item }) => <OneList {...item} />}
+            renderItem={({ item }) => (
+              <OneList {...item} />
+            )}
           />
         </>
       )}
