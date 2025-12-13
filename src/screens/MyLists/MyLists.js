@@ -3,14 +3,14 @@ import { s } from "./MyLists.style";
 import ScreenContainer from "../../components/ScreenContainer/ScreenContainer";
 import { useUserStore } from "../../store/userStore";
 import Header from "../../components/Header/Header";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useListStore } from "../../store/listsStore";
 import { useToastStore } from "../../store/toastStore";
 import OneList from "./components/OneList/OneList";
 
 export default function MyLists() {
   const { showToast } = useToastStore();
-  const { lists, addList } = useListStore();
+  const { lists, addList, setEditingListId, loadLists } = useListStore();
   const { user } = useUserStore();
   const [newListName, setNewListName] = useState("");
 
@@ -24,8 +24,11 @@ export default function MyLists() {
     addList(name);
     showToast(`Liste ${name} ajoutée !`, "success");
     setNewListName("");
-    console.log("lists", lists);
   }
+
+  useEffect(() => {
+    loadLists(); 
+  }, []);
 
   return (
     <ScreenContainer style={s}>
@@ -33,7 +36,6 @@ export default function MyLists() {
         text1={`${user?.icon} ${user?.name}, Yfokoi pour toi ?`}
         text2="Mes listes personnelles 🔒"
       />
-
       <View style={s.addContainer}>
         <TextInput
           placeholder="nouvelle liste"
@@ -45,18 +47,27 @@ export default function MyLists() {
           returnKeyType="done"
           // on ferme le clavier si true, false pour garder le clavier ouvert pour ecrire à la volée
           blurOnSubmit={true}
+          onPress={() => setEditingListId(null)}
         />
 
         <Pressable onPress={handleSubmit} style={s.addBtn}>
           <Text style={s.textAddBtn}>Ajouter</Text>
         </Pressable>
       </View>
-      <Text style={s.title}>Mes Listes</Text>
-      <FlatList
-        data={lists}
-        keyExtractor={(list) => list.id}
-        renderItem={({ item }) => <OneList {...item} />}
-      />
+      {lists.length === 0 ? (
+        <View style={s.noListContainer}>
+          <Text style={s.title}>🔼 Crée ta 1ère liste 🔼</Text>
+        </View>
+      ) : (
+        <>
+          <Text style={s.title}>Mes Listes</Text>
+          <FlatList
+            data={lists}
+            keyExtractor={(list) => list.id}
+            renderItem={({ item }) => <OneList {...item} />}
+          />
+        </>
+      )}
     </ScreenContainer>
   );
 }
